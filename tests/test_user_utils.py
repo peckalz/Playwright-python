@@ -24,3 +24,7 @@ def test_adult_user_exactly_18():
 def test_is_adult(age, expected):
     user = {"name": "Test User", "age": age}
     assert is_adult(user) == expected
+
+def test_user_with_cleanup(user_with_cleanup):
+    assert user_with_cleanup["age"] == 30
+    
