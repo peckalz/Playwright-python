@@ -1,21 +1,15 @@
 import pytest
 from playwright.sync_api import expect
 
-def test_products_page_visible(page, login_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
-
+def test_products_page_visible(page, logged_in_user):
+    logged_in_user
     expect(page.get_by_text("Sauce Labs Backpack")).to_be_visible()
     expect(page.get_by_text("Sauce Labs Bike Light")).to_be_visible()
     expect(page.get_by_text("Sauce Labs Bolt T-Shirt", exact=True)).to_be_visible()
 
 
-def test_products_sort_by_price_low_to_high(page, login_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+def test_products_sort_by_price_low_to_high(page, logged_in_user):
+    logged_in_user
     page.get_by_role("combobox").select_option("lohi")
 
     products = page.locator(".inventory_item_name")
@@ -25,19 +19,13 @@ def test_products_sort_by_price_low_to_high(page, login_page):
     expect(last_product).to_have_text("Sauce Labs Fleece Jacket")
 
 
-def test_add_product_to_cart(page, login_page, inventory_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
-
-    inventory_page.add_product_to_cart("Sauce Labs Backpack")
+def test_add_product_to_cart(page, logged_in_user):
+    logged_in_user.add_product_to_cart("Sauce Labs Backpack")
     expect(page.get_by_role("button", name="Remove")).to_be_visible()
     expect(page.locator(".shopping_cart_badge")).to_have_text("1")
 
-def test_remove_product_from_cart(page, login_page, inventory_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+def test_remove_product_from_cart(page, logged_in_user, inventory_page):
+    logged_in_user
 
     inventory_page.add_product_to_cart("Sauce Labs Backpack")
     expect(page.get_by_role("button", name="Remove")).to_be_visible()
@@ -46,10 +34,8 @@ def test_remove_product_from_cart(page, login_page, inventory_page):
     expect(page.locator(".shopping_cart_badge")).to_be_hidden()
 
 
-def test_product_visible_in_cart(page, login_page, cart_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+def test_product_visible_in_cart(page, logged_in_user, cart_page):
+    logged_in_user
 
     backpack = page.locator(".inventory_item_description").filter(has_text="Sauce Labs Backpack")
     backpack.get_by_role("button", name="Add to cart").click()
@@ -60,10 +46,8 @@ def test_product_visible_in_cart(page, login_page, cart_page):
     cart_page.has_product("Sauce Labs Backpack")
 
 
-def test_checkout_successful(page, login_page, cart_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+def test_checkout_successful(page, logged_in_user, cart_page):
+    logged_in_user
 
     backpack = page.locator(".inventory_item_description").filter(has_text="Sauce Labs Backpack")
     backpack.get_by_role("button", name="Add to cart").click()

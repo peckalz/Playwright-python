@@ -2,6 +2,7 @@ import pytest
 from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
+from playwright.sync_api import expect
 
 @pytest.fixture
 def adult_user():
@@ -19,6 +20,13 @@ def inventory_page(page):
 @pytest.fixture
 def cart_page(page):
     return CartPage(page)
+
+@pytest.fixture
+def logged_in_user(page, login_page, inventory_page):
+    login_page.open()
+    login_page.login("standard_user", "secret_sauce")
+    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+    return inventory_page
 
 @pytest.fixture
 def minor_user():
