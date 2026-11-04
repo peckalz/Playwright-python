@@ -1,6 +1,5 @@
 import pytest
 from playwright.sync_api import expect
-from pages.login_page import LoginPage
 
 def test_open_page(page):
     page.goto("https://saucedemo.com/")
@@ -35,8 +34,7 @@ def test_login_with_invalid_credentials(page, username, password, expected_error
     expect(page.get_by_text(expected_error)).to_be_visible()
 
 
-def test_successful_login(page):
-    login_page = LoginPage(page)
+def test_successful_login(page, login_page):
     login_page.open()
     login_page.login("standard_user", "secret_sauce")
 
