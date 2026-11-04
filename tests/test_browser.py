@@ -34,24 +34,19 @@ def test_login_with_invalid_credentials(page, username, password, expected_error
     expect(page.get_by_text(expected_error)).to_be_visible()
 
 
-def test_successful_login(page, login_page):
-    login_page.open()
-    login_page.login("standard_user", "secret_sauce")
-
-    expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
+def test_successful_login(page, logged_in_user):
+    logged_in_user
     expect(page.get_by_text("Products")).to_be_visible()
 
 
-def test_unsuccessful_login_with_invalid_credentials(page):
-    login_page = LoginPage(page)
+def test_unsuccessful_login_with_invalid_credentials(page, login_page):
     login_page.open()
     login_page.login("wrong_user", "wrong_password")
 
     expect(page.get_by_text("Epic sadface: Username and password do not match any user in this service")).to_be_visible()
 
 
-def test_unsuccessful_login_with_empty_credentials(page):
-    login_page = LoginPage(page)
+def test_unsuccessful_login_with_empty_credentials(page, login_page):
     login_page.open()
     login_page.login("", "")
 
