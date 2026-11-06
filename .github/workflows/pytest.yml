@@ -27,4 +27,14 @@ jobs:
         run: python -m playwright install --with-deps chromium
 
       - name: Run tests
-        run: python -m pytest -v
+        run: python -m pytest -v --html=report.html --self-contained-html
+      
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            screenshots/
+            report.html
+          if-no-files-found: ignore

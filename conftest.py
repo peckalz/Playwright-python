@@ -3,6 +3,8 @@ from pages.login_page import LoginPage
 from pages.inventory_page import InventoryPage
 from pages.cart_page import CartPage
 from playwright.sync_api import expect
+from pathlib import Path
+
 
 @pytest.fixture
 def adult_user():
@@ -28,14 +30,15 @@ def logged_in_user(page, login_page, inventory_page):
     expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
     return inventory_page
 
-@pytest.fixture
-def minor_user():
-    return {"name": "John",
-            "age": 15}
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
 
-@pytest.fixture
-def user_with_cleanup():
-    print("Creating user")
-    user_data = {"name": "Peter", "age": 30}
-    yield user_data
-    print("Deleting user")
+    if report.when == "call" and report.failed:
+        page = item.funcargs.get("page")
+        if page:
+            screenshot_dir = Path("screenshots")
+            screenshot_dir.mkdir(exist_ok=True)
+            screenshot_name = f"{item.name}.png"
+            page.screenshot(path=str(screenshot_dir / screenshot_name))
