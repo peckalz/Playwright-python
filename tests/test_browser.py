@@ -51,7 +51,3 @@ def test_unsuccessful_login_with_empty_credentials(page, login_page):
     login_page.login("", "")
 
     expect(page.get_by_text("Epic sadface: Username is required")).to_be_visible()
-
-def test_screenshot_example(page):
-    page.goto("https://saucedemo.com/")
-    assert False
