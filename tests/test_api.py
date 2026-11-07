@@ -1,6 +1,4 @@
 import requests
-import pytest
-from playwright.sync_api import expect
 
 
 def test_request_first_user():
@@ -10,14 +8,14 @@ def test_request_first_user():
 
     user = response.json()
 
-    assert "city" in user["address"]
+    assert isinstance(user, dict)
     assert "address" in user
+    assert isinstance(user["address"], dict)
+    assert "city" in user["address"]
     assert user["id"] == 1
     assert isinstance(user["id"], int)
-    assert isinstance(user, dict)
     assert isinstance(user["name"], str)
     assert isinstance(user["email"], str)
-    assert isinstance(user["address"], dict)
     assert isinstance(user["address"]["city"], str)
 
 
@@ -35,8 +33,9 @@ def test_create_user():
     }
     response = requests.post("https://jsonplaceholder.typicode.com/users", json = payload)
 
-    assert response.status_code == 201
     user = response.json()
+    assert response.status_code == 201
+    assert isinstance(user, dict)
     assert user["name"]  == payload["name"]
     assert user["email"]  == payload["email"]
     assert "id" in user
@@ -53,6 +52,7 @@ def test_update_user_put():
 
     user = response.json()
     assert response.status_code == 200
+    assert isinstance(user, dict)
     assert user["name"] == payload["name"]
     assert user["email"] == payload["email"]
 
@@ -65,6 +65,7 @@ def test_update_user_patch():
 
     user = response.json()
     assert response.status_code == 200
+    assert isinstance(user, dict)
     assert user["email"] == payload["email"]
 
 

@@ -7,11 +7,6 @@ from pathlib import Path
 
 
 @pytest.fixture
-def adult_user():
-    return {"name": "Peter",
-            "age": 30}
-
-@pytest.fixture
 def login_page(page):
     return LoginPage(page)
 
@@ -24,7 +19,7 @@ def cart_page(page):
     return CartPage(page)
 
 @pytest.fixture
-def logged_in_user(page, login_page, inventory_page):
+def logged_in_inventory(page, login_page, inventory_page):
     login_page.open()
     login_page.login("standard_user", "secret_sauce")
     expect(page).to_have_url("https://www.saucedemo.com/inventory.html")
